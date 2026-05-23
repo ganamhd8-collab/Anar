@@ -11,8 +11,15 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>()
-            .ToTable("users");
+        modelBuilder.Entity<User>().ToTable("users");
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Email).HasColumnName("email");
+            entity.Property(e => e.PasswordHash).HasColumnName("password_hash");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+        });
 
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)
