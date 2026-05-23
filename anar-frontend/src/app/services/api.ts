@@ -37,7 +37,7 @@ export const api = {
       try {
         const errorData = await response.json();
         errorMsg = errorData.message || errorMsg;
-      } catch {}
+      } catch { }
       throw new Error(errorMsg);
     }
 

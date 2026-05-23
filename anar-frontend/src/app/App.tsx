@@ -89,25 +89,25 @@ export default function App() {
         style={
           isMobile
             ? {
-                width: "100%",
-                height: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                background: "#FAFAFB",
-                position: "relative",
-              }
+              width: "100%",
+              height: "100vh",
+              display: "flex",
+              flexDirection: "column",
+              background: "#FAFAFB",
+              position: "relative",
+            }
             : {
-                width: 412,
-                height: "min(880px, 94vh)",
-                display: "flex",
-                flexDirection: "column",
-                background: "#FAFAFB",
-                borderRadius: 40,
-                overflow: "hidden",
-                boxShadow: "0 28px 72px rgba(108, 92, 231, 0.22), inset 0 0 2px rgba(255,255,255,0.2)",
-                border: "12px solid #1C1C1E",
-                position: "relative",
-              }
+              width: 350,
+              height: "min(820px, 93vh)",
+              display: "flex",
+              flexDirection: "column",
+              background: "#FAFAFB",
+              borderRadius: 46,
+              overflow: "hidden",
+              boxShadow: "0 28px 72px rgba(108, 92, 231, 0.22), inset 0 0 2px rgba(255,255,255,0.2)",
+              border: "10px solid #1C1C1E",
+              position: "relative",
+            }
         }
       >
         {/* Sleek camera punch hole / speaker notch for desktop preview */}
