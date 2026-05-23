@@ -11,7 +11,11 @@ export class AuthGuard implements CanActivate {
 
     try {
       const payload = jwt.verify(token, process.env.JWT_SECRET || 'secret');
-      request.user = payload;
+      const decoded: any = payload;
+      request.user = {
+        id: decoded.sub || decoded.id,
+        email: decoded.email,
+      };
       return true;
     } catch {
       throw new UnauthorizedException();
