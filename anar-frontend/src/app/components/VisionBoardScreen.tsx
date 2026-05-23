@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, Target, RefreshCw } from "lucide-react";
 import { api } from "../services/api";
 
@@ -17,6 +17,13 @@ export function VisionBoardScreen({ onNavigate, activeGoal, tasks, setTasks, ref
 
   const completedCount = tasks.filter(t => t.completed).length;
   const progress = tasks.length > 0 ? (completedCount / tasks.length) * 100 : 0;
+
+  // Animate progress bar from 0 on mount
+  const [displayProgress, setDisplayProgress] = useState(0);
+  useEffect(() => {
+    const t = setTimeout(() => setDisplayProgress(progress), 150);
+    return () => clearTimeout(t);
+  }, [progress]);
 
   const toggleTask = async (id: string, currentlyCompleted: boolean) => {
     // Optimistic UI update
@@ -129,10 +136,10 @@ export function VisionBoardScreen({ onNavigate, activeGoal, tasks, setTasks, ref
                 }}>
                   <div
                     style={{
-                      height: "100%", width: `${progress}%`,
+                      height: "100%", width: `${displayProgress}%`,
                       background: "#4F46E5",
                       borderRadius: 3,
-                      transition: "width 0.3s ease",
+                      transition: "width 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                   />
                 </div>
@@ -152,10 +159,11 @@ export function VisionBoardScreen({ onNavigate, activeGoal, tasks, setTasks, ref
 
             {/* Task list (checklist style) */}
             <div style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", borderRadius: 12, border: "1px solid #E2E8F0", overflow: "hidden" }}>
-              {tasks.map((task) => (
+              {tasks.map((task, i) => (
                 <div
                   key={task.id}
                   onClick={() => toggleTask(task.id, task.completed)}
+                  className="fade-slide-up"
                   style={{
                     padding: "12px 14px",
                     display: "flex",
@@ -165,6 +173,7 @@ export function VisionBoardScreen({ onNavigate, activeGoal, tasks, setTasks, ref
                     borderBottom: "1px solid #F1F5F9",
                     opacity: task.completed ? 0.5 : 1,
                     transition: "opacity 0.2s ease",
+                    animationDelay: `${i * 50}ms`,
                   }}
                 >
                   {/* Left: Circular checkbox */}
