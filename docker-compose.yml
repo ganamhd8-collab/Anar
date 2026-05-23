@@ -43,6 +43,17 @@ services:
       postgres:
         condition: service_healthy
 
+  ai-bridge-service:
+    build:
+      context: .
+      dockerfile: ./backend/services/ai-bridge-service/Dockerfile
+    ports:
+      - "3006:3006"
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   ai-logic:
     build:
       context: .

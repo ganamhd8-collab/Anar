@@ -13,7 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [goal-service, task-service, notification-service]
+        # Added ai-bridge-service here!
+        service: [goal-service, task-service, notification-service, ai-bridge-service]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
