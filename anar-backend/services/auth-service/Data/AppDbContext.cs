@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using auth_service.Models;
 
 namespace auth_service.Data;
@@ -11,6 +11,9 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<User>()
+            .ToTable("users");
+
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)
             .IsUnique();
