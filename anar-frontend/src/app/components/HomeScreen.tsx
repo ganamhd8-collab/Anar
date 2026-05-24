@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { Bell, ChevronLeft, Plus, ArrowLeft, LogOut } from "lucide-react";
+import { Screen, Goal, Task } from "../types";
 
-type Screen = "home" | "chat" | "vision";
 interface Props {
   onNavigate: (s: Screen) => void;
-  activeGoal: { id: string; text: string } | null;
-  tasks: any[];
+  activeGoal: Goal | null;
+  tasks: Task[];
   onLogout: () => void;
 }
+
 
 const quickChips = [
   { emoji: "🎓", label: "دراسة" },

@@ -1,12 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { HomeScreen } from "./components/HomeScreen";
 import { ChatScreen } from "./components/ChatScreen";
 import { VisionBoardScreen } from "./components/VisionBoardScreen";
 import { api } from "./services/api";
 import { AuthScreen } from "./components/AuthScreen";
-
-type Screen = "home" | "chat" | "vision";
+import { Screen, Goal, Task } from "./types";
 
 const tabs: { id: Screen; label: string; icon: string }[] = [
   { id: "home", label: "الرئيسية", icon: "🏠" },
@@ -18,14 +17,10 @@ export default function App() {
   const [screen, setScreen] = useState<Screen>("home");
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [token, setToken] = useState<string | null>(api.getToken());
-  const [activeGoal, setActiveGoal] = useState<any>(null);
-  const [tasks, setTasks] = useState<any[]>([]);
-  const [loadingGoal, setLoadingGoal] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [activeGoal, setActiveGoal] = useState<Goal | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const fetchActiveGoal = async () => {
-    if (!api.getToken()) return;
-    setLoadingGoal(true);
     try {
       const data = await api.getGoal();
       if (data) {
@@ -37,8 +32,6 @@ export default function App() {
       }
     } catch (err) {
       console.error("Failed to fetch goal:", err);
-    } finally {
-      setLoadingGoal(false);
     }
   };
 
@@ -70,7 +63,6 @@ export default function App() {
 
   return (
     <div
-      ref={wrapperRef}
       style={{
         width: "100%",
         height: "100%",

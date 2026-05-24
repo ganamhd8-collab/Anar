@@ -1,8 +1,9 @@
-const AUTH_BASE = "http://localhost:3001";
-const GOAL_BASE = "http://localhost:3002";
-const TASK_BASE = "http://localhost:3003";
+const AUTH_BASE = import.meta.env.VITE_AUTH_SERVICE_URL || "http://localhost:3001";
+const GOAL_BASE = import.meta.env.VITE_GOAL_SERVICE_URL || "http://localhost:3002";
+const TASK_BASE = import.meta.env.VITE_TASK_SERVICE_URL || "http://localhost:3003";
 
 let authToken = localStorage.getItem("anar_token") || null;
+
 
 export const api = {
   setToken(token: string | null) {

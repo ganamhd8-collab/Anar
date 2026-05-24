@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, Target, RefreshCw } from "lucide-react";
 import { api } from "../services/api";
-
-type Screen = "home" | "chat" | "vision";
+import { Screen, Goal, Task } from "../types";
 
 interface Props {
   onNavigate: (s: Screen) => void;
-  activeGoal: { id: string; text: string } | null;
-  tasks: any[];
-  setTasks: React.Dispatch<React.SetStateAction<any[]>>;
+  activeGoal: Goal | null;
+  tasks: Task[];
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   refreshGoal: () => Promise<void>;
 }
+
 
 export function VisionBoardScreen({ onNavigate, activeGoal, tasks, setTasks, refreshGoal }: Props) {
   const [updating, setUpdating] = useState(false);

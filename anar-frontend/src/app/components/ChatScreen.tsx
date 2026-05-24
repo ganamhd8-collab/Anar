@@ -1,15 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, MoreVertical } from "lucide-react";
 import { api } from "../services/api";
-
-type Screen = "home" | "chat" | "vision";
+import { Screen, Message } from "../types";
 
 interface Props {
   onNavigate: (s: Screen) => void;
   refreshGoal: () => Promise<void>;
 }
 
-const initialMessages = [
+const initialMessages: Message[] = [
   { id: 1, role: "user", text: "أريد الاستعداد لاختبارات نهاية الفصل الدراسي", time: "9:41 ص" },
   {
     id: 2,
@@ -20,19 +19,28 @@ const initialMessages = [
 ];
 
 export function ChatScreen({ onNavigate, refreshGoal }: Props) {
-  const [messages, setMessages] = useState(initialMessages);
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [inputVal, setInputVal] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [creating, setCreating] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleSendMessage = () => {
     if (!inputVal.trim()) return;
-    const userMsg = {
+    const userMsg: Message = {
       id: Date.now(),
       role: "user",
       text: inputVal,
@@ -44,9 +52,9 @@ export function ChatScreen({ onNavigate, refreshGoal }: Props) {
     setIsTyping(true);
 
     // Simulate AI response
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       setIsTyping(false);
-      const aiMsg = {
+      const aiMsg: Message = {
         id: Date.now() + 1,
         role: "ai",
         text: `لقد فهمت ذلك! سأقوم بتسجيل تفاصيل هدفك: "${userMsg.text}". اضغط على الزر أدناه لإنشاء خطة المهام وجدولتها في لوحة الأهداف.`,
@@ -72,6 +80,7 @@ export function ChatScreen({ onNavigate, refreshGoal }: Props) {
       setCreating(false);
     }
   };
+
 
   return (
     <div
@@ -226,8 +235,9 @@ export function ChatScreen({ onNavigate, refreshGoal }: Props) {
             marginTop: 8,
           }}
         >
-          <span>{creating ? "جاري إنشاء المهام..." : "إنشاء لوحة الأهداف الدراسية"}</span>
+          <span>{creating ? "جاري إنشاء المهام..." : "إنشاء لوحة الأهداف"}</span>
         </button>
+
       </div>
 
       {/* Input bar */}
