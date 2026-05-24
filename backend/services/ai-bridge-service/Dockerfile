@@ -1,37 +1,41 @@
-# --- Build Stage ---
-FROM node:18-alpine AS builder
+# ─────────────────────────────────────────────────────────────────────────────
+#  ai-bridge-service — Dockerfile (multi-stage)
+#  Stage 1: builder  — installs all deps and compiles TypeScript → dist/
+#  Stage 2: runner   — copies only the compiled output and prod deps
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Stage 1: Builder ──────────────────────────────────────────────────────────
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# 1. Copy the shared contracts (so the service can understand shared types)
-COPY backend/shared ./backend/shared
+# Copy manifests first for better layer caching.
+COPY package*.json ./
 
-# 2. Copy the actual service code
-COPY backend/services/ai-bridge-service ./backend/services/ai-bridge-service
+# Install ALL dependencies (including devDependencies needed for tsc).
+RUN npm ci
 
-# 3. Move into the service folder
-WORKDIR /app/backend/services/ai-bridge-service
-
-# 4. Install ALL dependencies (including devDependencies like TypeScript)
-RUN npm install
-
-# 5. Compile the TypeScript into the /dist folder
+# Copy source and compile.
+COPY . .
 RUN npm run build
 
 
-# --- Production Stage ---
-FROM node:18-alpine
+# ── Stage 2: Runner ───────────────────────────────────────────────────────────
+FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-# 6. Copy only the necessary runtime files from the builder stage
-COPY --from=builder /app/backend/services/ai-bridge-service/node_modules ./node_modules
-COPY --from=builder /app/backend/services/ai-bridge-service/dist ./dist
-COPY --from=builder /app/backend/services/ai-bridge-service/package*.json ./
+# Only install production dependencies in the final image.
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-# 7. Expose a fresh port so it doesn't crash into the Python service
-EXPOSE 3006
+# Copy compiled output from builder.
+COPY --from=builder /app/dist ./dist
 
-# 8. Start the compiled JavaScript application
-CMD ["npm", "run", "start:prod"]
+# Expose the service port (must match PORT env var).
+EXPOSE 3004
 
+# Run as non-root for security.
+USER node
+
+CMD ["node", "dist/main"]
