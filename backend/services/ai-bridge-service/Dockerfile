@@ -34,3 +34,4 @@ EXPOSE 3006
 
 # 8. Start the compiled JavaScript application
 CMD ["npm", "run", "start:prod"]
+

@@ -26,4 +26,4 @@ EXPOSE 3001
 COPY --from=build /app/publish .
 
 # Start the .NET application
-ENTRYPOINT ["dotnet", "auth-service.dll"]
+ENTRYPOINT ["dotnet", "auth-service.dll"]

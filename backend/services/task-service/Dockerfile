@@ -33,3 +33,4 @@ EXPOSE 3003
 
 # 7. Start the compiled NestJS application
 CMD ["npm", "run", "start:prod"]
+
