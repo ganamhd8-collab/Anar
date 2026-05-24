@@ -10,11 +10,10 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy manifests first for better layer caching.
-# If package.json doesn't change, npm ci is skipped on rebuild.
 COPY package*.json ./
 
 # Install ALL dependencies (devDependencies needed for tsc / nest build).
-RUN npm ci
+RUN npm install
 
 # Copy source files and compile TypeScript → dist/
 COPY . .
@@ -28,7 +27,7 @@ WORKDIR /app
 
 # Only production dependencies in the final image — keeps it lean.
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 
 # Copy compiled output from builder stage.
 COPY --from=builder /app/dist ./dist

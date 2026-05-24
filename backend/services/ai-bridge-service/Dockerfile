@@ -13,7 +13,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install ALL dependencies (including devDependencies needed for tsc).
-RUN npm ci
+RUN npm install
 
 # Copy source and compile.
 COPY . .
@@ -27,7 +27,7 @@ WORKDIR /app
 
 # Only install production dependencies in the final image.
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 
 # Copy compiled output from builder.
 COPY --from=builder /app/dist ./dist
